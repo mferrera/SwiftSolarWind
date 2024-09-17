@@ -1,6 +1,6 @@
 import Foundation
 
-protocol NOAAMeasurement {
+protocol Measurement {
   /// The timestamp associated with this measurement.
   var timeTag: Date { get }
 }

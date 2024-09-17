@@ -9,8 +9,8 @@ let package = Package(
   ],
   products: [
     .executable(
-      name: "SolarWindCLI",
-      targets: ["SolarWindCLI"]
+      name: "solarwind-example",
+      targets: ["solarwind-example"]
     ),
     .library(
       name: "SolarWind",
@@ -18,7 +18,7 @@ let package = Package(
   ],
   targets: [
     .executableTarget(
-      name: "SolarWindCLI",
+      name: "solarwind-example",
       dependencies: ["SolarWind"]
     ),
     .target(

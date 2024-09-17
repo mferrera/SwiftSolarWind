@@ -1,12 +1,15 @@
 import Foundation
 
-enum NOAAPlasmaTestHelper {
+enum MagnometerTestHelper {
 
   static let header: [String] = [
     "time_tag",
-    "density",
-    "speed",
-    "temperature",
+    "bx_gsm",
+    "by_gsm",
+    "bz_gsm",
+    "lon_gsm",
+    "lat_gsm",
+    "bt",
   ]
 
   static func generateMeasurement() -> [String] {
@@ -14,14 +17,17 @@ enum NOAAPlasmaTestHelper {
       RandomGeneratorHelper.generateRandomNOAADateString(),
       RandomGeneratorHelper.generateRandomFloatString(),
       RandomGeneratorHelper.generateRandomFloatString(),
-      RandomGeneratorHelper.generateRandomIntString(),
+      RandomGeneratorHelper.generateRandomFloatString(),
+      RandomGeneratorHelper.generateRandomFloatString(),
+      RandomGeneratorHelper.generateRandomFloatString(),
+      RandomGeneratorHelper.generateRandomFloatString(),
     ]
   }
 
   static func generateMeasurements(num: Int) -> [[String]] {
     var measurements = [header]
     for _ in 1...num {
-      measurements.append(NOAAPlasmaTestHelper.generateMeasurement())
+      measurements.append(MagnometerTestHelper.generateMeasurement())
     }
     return measurements
   }

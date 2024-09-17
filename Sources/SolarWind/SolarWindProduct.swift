@@ -1,6 +1,6 @@
 import Foundation
 
-protocol NOAASolarWindProduct {
+protocol SolarWindProduct {
   /// The URL to NOAA JSON containing the last 5 minutes of measurements.
   static var fiveMinute: URL { get }
 
@@ -22,15 +22,15 @@ protocol NOAASolarWindProduct {
   /// The ordered headers or NOAA solar wind data.
   static var header: [String] { get }
 
-  associatedtype NOAAMeasurementType: NOAAMeasurement
+  associatedtype MeasurementType: Measurement
 
   /// Parse the raw measurements retrieved from NOAA into a list of a measurement type.
-  static func parseMeasurements<T: Collection>(_ dataRows: T) async throws
-    -> [NOAAMeasurementType] where T.Element == [NOAAMeasurementValue]
+  static func parseMeasurements<T: Collection>(_ dataRows: T) async throws -> [MeasurementType]
+  where T.Element == [MeasurementValue]
 
-  /// Download the raw JSON data from NOAA.
-  static func downloadJSON(from: URL) async throws -> [NOAAMeasurementType]
+  /// Download and parse the raw JSON data from NOAA.
+  static func downloadMeasurements(from: URL) async throws -> [MeasurementType]
 
   /// Collect and return measurements over a given internal.
-  static func measurements(interval: SolarWind.Interval) async throws -> [NOAAMeasurementType]
+  static func measurements(interval: SolarWind.Interval) async throws -> [MeasurementType]
 }

@@ -69,33 +69,75 @@ import Foundation
 /// BT is the total magnitude of the magnetic field vector, regardless of direction. It helps
 /// describe the overall intensity of the IMF. Higher BT values indicate stronger solar wind
 /// magnetic fields, which are often associated with more intense space weather conditions.
-public struct NOAAMagnetometerMeasurement: NOAAMeasurement {
+public struct MagnetometerMeasurement: Measurement {
   /// The timestamp associated with this measurement.
   public let timeTag: Date
 
-  /// The x-axis component, which points from the Earth toward the sun.
-  public let bxGSM: Float
+  /// The x-axis component, which points from the Earth toward the sun. Unit: nanotesla (nT).
+  public let bxGSM: Double
 
   /// The y-axis component, which points perpendicular to both the x-axis and the magnetic dipole
   /// axis of Earth, roughly in the direction of the ecliptic plane (the plane in which Earth
-  /// orbits the sun).
-  public let byGSM: Float
+  /// orbits the sun). Unit: nanotesla (nT).
+  public let byGSM: Double
 
   /// The z-axis component, which points toward Earth's north magnetic pole, perpendicular to the
-  /// ecliptic plane.
-  public let bzGSM: Float
+  /// ecliptic plane. Unit: nanotesla (nT).
+  public let bzGSM: Double
 
   /// The longitudinal angle of the magnetic field vector measured in the XY plane (the equatorial
-  /// plane), relative to the GSM X-axis (which points toward the Sun). Measured in degrees, from
-  /// 0° - 360°.
-  public let lonGSM: Float
+  /// plane), relative to the GSM X-axis (which points toward the Sun). Unit: degrees, from 0° -
+  /// 360°.
+  public let lonGSM: Double
 
   /// The latitudinal angle of the magnetic of the magnetic field vector in the GSM Z direction
   /// (north-south), relative to the equatorial plane (which is aligned with the GSM XY plane).
-  /// Measured in degrees, from -90° - 90°.
-  public let latGSM: Float
+  /// Unit: degrees, from -90° - 90°.
+  public let latGSM: Double
 
   /// BT represents the total strength (magnitude) of the Interplanetary Magnetic Field (IMF),
-  /// calculated from the three components Bx, By, and Bz. Measured in nanoteslas (nT).
-  public let bt: Float
+  /// calculated from the three components Bx, By, and Bz. Unit: nanoteslas (nT).
+  public let bt: Double
+
+  /// Calculate the magnetic pressure from this measurement.
+  ///
+  /// Magnetic pressure is the pressure exerted by the magnetic field in the plasma. It is the force
+  /// per unit area due to the magnetic field and represents the nergy density stored in the
+  /// magnetic field. It affects how the plasma behaves and interacts with magnetic fields like the
+  /// Earth's magnetosphere.
+  ///
+  /// The magnetic pressure is given by:
+  ///
+  ///            B^2
+  ///   P_mag = -----
+  ///           2 μ_0
+  ///
+  /// Where
+  ///   - P_mag is the magnetic pressure in pascals (Pa),
+  ///   - B is the magnetic field strength in Telsas (T),
+  ///   - μ_0 is the vacuum permeability constant in N/A^2.
+  ///
+  /// - Returns: The magnetic pressure in pascals (Pa).
+  public func magneticPressure() -> Double {
+    let btInTesla = bt * 1e-9
+    return (btInTesla * btInTesla) / (2.0 * Constants.mu0)
+  }
+
+  /// Calculate the clock angle of the IMF in the GSM coordinate system.
+  ///
+  /// The clock angle describes the orientation of the Interplanetary Magnetic Field (IMF) in the
+  /// Geocentric Solar Magnetospheric (GSM) coordinate system. It is the angle that the magnetic
+  /// field vector makes in the YZ plane of the GSM system, relative to the Z-axis which points
+  /// toward Earth's magnetic north pole.
+  ///
+  ///   θ_c = tan^-1(By /Bz)
+  ///
+  /// - Returns: The clock angle in degrees, from 0° to 360°.
+  public func clockAngle() -> Double {
+    let angle = atan(byGSM / bzGSM) * (180.0 / Double.pi)
+    if angle < 0.0 {
+      return angle + 360.0
+    }
+    return angle
+  }
 }
