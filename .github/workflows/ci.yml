@@ -1,0 +1,34 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]  # TODO: Ubuntu doesn't yet support URLSession.shared
+        swift: ["5.10"]  # TODO: Swift >= 6
+
+    steps:
+      - name: Checkout 
+        uses: actions/checkout@v4
+
+      - uses: swift-actions/setup-swift@2
+        with:
+          swift-version: ${{ matrix.swift }}
+
+      - name: Build
+        run: swift build -v
+
+      - name: Run tests
+        run: swift test -v
