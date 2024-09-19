@@ -8,19 +8,11 @@ let package = Package(
     .macOS(.v13)
   ],
   products: [
-    .executable(
-      name: "solarwind-example",
-      targets: ["solarwind-example"]
-    ),
     .library(
       name: "SolarWind",
-      targets: ["SolarWind"]),
+      targets: ["SolarWind"])
   ],
   targets: [
-    .executableTarget(
-      name: "solarwind-example",
-      dependencies: ["SolarWind"]
-    ),
     .target(
       name: "SolarWind"),
     .testTarget(
